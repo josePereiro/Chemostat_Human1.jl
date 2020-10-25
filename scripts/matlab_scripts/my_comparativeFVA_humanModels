@@ -1,0 +1,59 @@
+function results = comparativeFVA_humanModels(cellLine)
+% This is a modified version
+%comparativeFVA_humanModels
+%
+% Function that runs a comparative flux variabiability analysis between a
+% GEM and its enzyme constrained counterpart for a given cell-line specific
+% model.
+%
+% cellLine  (string) cell-line name (It should be consistent with the name
+%           of the subfolder in which the model is stored.
+%
+% results   (table) Contains rxnIDs, rxn formulas, Flux variability 
+%           distributions for both GEM and ecGEM in [mmol/gDw h] and
+%           metabolic subSystems for all rxns for which a variability range
+%           in bothmodels was calculated
+%
+% Usage: FVA_Dists = comparativeFVA_humanModels(cellLine)
+%
+%   Ivan Domenzain, 2019-12-16
+
+%Load GEM and ecGEM
+proj_folder = get_proj_folder(); % locator
+model_folder = fullfile(proj_folder, 'ec_GEMs', 'models', cellLine);
+load([model_folder '/' cellLine '.mat'])
+load([model_folder '/ecModel_batch.mat'])
+eval(['model = ' cellLine ';'])
+%Set medium constraints
+model   = removeMetFields(model);
+model   = setHamsMedium(model,false);
+ecModel = setHamsMedium(ecModel_batch,true);
+evalin( 'base', 'clear(''model_modified'')' )
+evalin( 'base', 'clear(''ecModel_batch'')' )
+%Use GECKO built-in function for FVA comparative analysis
+CsourceUptk = 'HMR_9034';
+[FVA_Dists,indexes,~,~] = comparativeFVA(model,ecModel,CsourceUptk,false,1E-8);
+%Write results in a table and save it as .txt file
+res_folder = get_results_folder(); % locator
+mkdir([res_folder '/FVA'])
+variables = {'rxns' 'formulas' 'model_ranges' 'ecModel_ranges' 'subSystems'};
+formulas  = constructEquations(model,indexes);
+results   = table(model.rxns(indexes),formulas,FVA_Dists{1},FVA_Dists{2},model.subSystems(indexes),'VariableNames',variables);
+writetable(results,[res_folder '/FVA/FVA_comp_' cellLine],'Delimiter','\t','QuoteStrings',false)
+
+end
+%--------------------------------------------------------------------------
+function model = removeMetFields(model)
+if isfield(model,'inchis')
+    model = rmfield(model,'inchis');
+end
+if isfield(model,'metMiriams')
+    model = rmfield(model,'metMiriams');
+end
+if isfield(model,'metCharges')
+    model = rmfield(model,'metCharges');
+end
+if isfield(model,'metFrom')
+    model = rmfield(model,'metFrom');
+end
+end
