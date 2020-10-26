@@ -7,8 +7,8 @@ deps
 temp
 
 # TODO include this two folders
-data/processed/models
-data/processed/prediction_results
+data/processed/human1_models
+data/processed/human1_prediction_results
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,windows,git,julia,matlab
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,git,julia,matlab

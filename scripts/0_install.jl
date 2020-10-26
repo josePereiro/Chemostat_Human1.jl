@@ -13,7 +13,7 @@ try
     pkg"rm Chemostat"
     pkg"rm UtilsJL"
 catch; end
-pkg"add https://github.com/josePereiro/UtilsJL.git#v0.2.3"
-pkg"add https://github.com/josePereiro/Chemostat#v0.7.0"
+pkg"add https://github.com/josePereiro/UtilsJL.git#master"
+pkg"add https://github.com/josePereiro/Chemostat#f4078c2"
 pkg"instantiate"
 pkg"build"
