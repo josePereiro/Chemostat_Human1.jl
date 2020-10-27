@@ -168,7 +168,7 @@ end
 # Plant markers
 plant_matlocator(joinpath(H1.HUMAN1_MODELS_DIR, "get_models_folder"))
 plant_matlocator(joinpath(H1.CACHE_DIR, "get_cache_folder"))
-plant_matlocator(joinpath(H1.HUMAN1_PREDICTION_RESULTS_DIR, "get_results_folder"))
+plant_matlocator(joinpath(H1.HUMAN1_RESULTS_DIR, "get_results_folder"))
 plant_matlocator(joinpath(temp_dir, "get_proj_folder"))
 
 ## --------------------------------------------------------------------

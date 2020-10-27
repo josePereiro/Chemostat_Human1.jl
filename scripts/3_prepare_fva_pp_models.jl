@@ -46,7 +46,7 @@ for cell_line in H1.CELL_NAMES
             # Loading
             model_key, model_mat = first(MAT.matread(model_file));
             model = ChU.MetNet(model_mat; reshape = true);
-            ChU.clampfileds!(model, [:b, :lb, :ub]; 
+            ChU.clampfields!(model, [:b, :lb, :ub]; 
                 abs_max = H1.MAX_ABS_BOUND, zeroth = H1.ZEROTH)
             ChU.println_inmw("size: ", size(model))
             println("Orig model objval: ", fba_objval(model))
@@ -102,7 +102,6 @@ for cell_line in H1.CELL_NAMES
             # FVA preprocessing
             fva_pp_model = ChLP.fva_preprocess(model, check_obj = H1.BIOMASS_IDER);
             ChU.println_inmw("size: ", size(fva_pp_model))
-            fva_pp_model = model # test
 
             # Checking
             ChU.println_inmw("fva preprocessed model, objval: ", fba_objval(model))
