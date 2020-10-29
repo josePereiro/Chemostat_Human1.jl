@@ -102,8 +102,6 @@ for cell_line in H1.CELL_NAMES
             # FVA preprocessing
             fva_pp_model = ChLP.fva_preprocess(model, check_obj = H1.BIOMASS_IDER);
             ChU.println_inmw("size: ", size(fva_pp_model))
-
-            # Checking
             ChU.println_inmw("fva preprocessed model, objval: ", fba_objval(model))
 
             ## --------------------------------------------------------------------
