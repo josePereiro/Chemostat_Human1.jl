@@ -1,3 +1,30 @@
+using ArgParse
+
+set = ArgParseSettings()
+@add_arg_table! set begin
+    "--name", "-n"
+        help = "A name that uniquely identify the simulation, it is used in caching"
+        default = "maxent_ep_v1"
+        required = false
+    "--beta0"
+        help = "the lower limit of the range to search experimental beta"
+        default = "0.0"
+        required = false
+    "--beta1"
+        help = "the upper limit of the range to search experimental beta"
+        default = "10000.0"
+        required = false
+end
+
+const parsed_args = parse_args(set)
+# This must uniquely identify the script
+const SIM_IDER = parsed_args["name"]
+println("sim_ider: ", SIM_IDER)
+const beta0 = parse(Float64, parsed_args["beta0"])
+println("beta0: ", beta0)
+const beta1 = parse(Float64, parsed_args["beta1"])
+println("beta1: ", beta1)
+
 ## --------------------------------------------------------------------
 import DrWatson: quickactivate
 quickactivate(@__DIR__, "Chemostat_Human1")
@@ -41,9 +68,6 @@ model = ChU.load_data(model_file);
 println("model size:   ", size(model))
 println("model objval: ", fba_objval(model))
 
-## --------------------------------------------------------------------
-# This must uniquely identify the script
-const SIM_IDER = "maxent_ep_v1"
 
 ## --------------------------------------------------------------------
 # epouts
@@ -53,7 +77,7 @@ const epouts = something(dat, Dict())
 
 ## --------------------------------------------------------------------
 # find exp_beta
-exp_beta = ChSU.find_beta(model; beta0 = 0.0, beta1 = 10_000.0, 
+exp_beta = ChSU.find_beta(model; beta0, beta1, 
     obj_ider = H1.BIOMASS_IDER, errorth = 0.1,
     target_objval = exp_grate, epouts,
     after_maxent_ep = function(epout)
