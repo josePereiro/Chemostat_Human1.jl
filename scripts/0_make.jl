@@ -63,6 +63,27 @@ end
 import DrWatson: quickactivate
 quickactivate(@__DIR__, "Chemostat_Human1")
 
+## ------------------------------------------------------------------------
+if install_flag
+    # sync
+    cd(@__DIR__)
+    run(`git reset -q HEAD -- .`)
+    run(`git checkout -- .`)
+    run(`git pull`)
+    # Install unregistered packages
+    using Pkg
+    try
+        pkg"rm Chemostat"
+        pkg"rm UtilsJL"
+    catch; end
+    pkg"add https://github.com/josePereiro/UtilsJL.git#master"
+    pkg"add https://github.com/josePereiro/Chemostat#adbeb2f"
+    pkg"instantiate"
+    pkg"build"
+    pkg"test Chemostat"
+end
+
+## ------------------------------------------------------------------------
 import Chemostat_Human1
 const H1 = Chemostat_Human1
 cd(H1.PROJ_ROOT)
@@ -81,25 +102,6 @@ if clear_fva_models_flag
         rm(H1.FVA_PP_MODELS_DIR, force = true, recursive = true)
         @info string(relpath(H1.FVA_PP_MODELS_DIR), " deleted!!!")
     end
-end
-
-    
-## ------------------------------------------------------------------------
-if install_flag
-    # sync
-    run(`git reset -q HEAD -- .`)
-    run(`git checkout -- .`)
-    run(`git pull`)
-    # Install unregistered packages
-    using Pkg
-    try
-        pkg"rm Chemostat"
-        pkg"rm UtilsJL"
-    catch; end
-    pkg"add https://github.com/josePereiro/UtilsJL.git#master"
-    pkg"add https://github.com/josePereiro/Chemostat#adbeb2f"
-    pkg"instantiate"
-    pkg"build"
 end
 
 ## ------------------------------------------------------------------------
