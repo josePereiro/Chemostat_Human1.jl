@@ -15,6 +15,9 @@ using ArgParse
 
 set = ArgParseSettings()
 @add_arg_table! set begin
+    "--force-pull"
+        help = "make a sync with the remote"
+        action = :store_true
     "--install"
         help = "run an installation script"
         action = :store_true
@@ -48,6 +51,7 @@ set = ArgParseSettings()
 end
 
 parsed_args = parse_args(set)
+force_pull_flag = parsed_args["force-pull"]
 install_flag = parsed_args["install"]
 clear_cache_flag = parsed_args["clear-cache"]
 clear_fva_models_flag = parsed_args["clear-fva-models"]
@@ -65,12 +69,24 @@ import DrWatson: quickactivate
 quickactivate(@__DIR__, "Chemostat_Human1")
 
 ## ------------------------------------------------------------------------
-if install_flag
-    # sync
+function force_pull()
+    here = pwd()
     cd(@__DIR__)
     run(`git reset -q HEAD -- .`)
-    run(`git checkout -- .`)
-    run(`git pull`)
+    run(` git checkout -- .`)
+    try;
+        run(`git pull`)
+    catch err
+        @warn string("fail to pull: error ", err)
+    end
+    cd(here)
+end
+force_pull_flag && force_pull()
+
+## ------------------------------------------------------------------------
+if install_flag
+    # sync
+    force_pull()
     # Install unregistered packages
     try
         pkg"rm Chemostat"
@@ -103,7 +119,3 @@ if clear_fva_models_flag
         @info string(relpath(H1.FVA_PP_MODELS_DIR), " deleted!!!")
     end
 end
-
-## ------------------------------------------------------------------------
-# Testing Chemostat
-pkg"test Chemostat"

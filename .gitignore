@@ -1,10 +1,12 @@
 # custom
 *dev/*
 *cache/*
+data/processed
 data/processed/cache
 data/raw/
 deps
 temp
+log.txt
 
 # TODO include this two folders
 data/processed/human1_models
