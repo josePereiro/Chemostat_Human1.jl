@@ -55,10 +55,11 @@ clear_fva_models_flag = parsed_args["clear-fva-models"]
 # clear_args = isnothing(clear_args) ? nothing : split(clear_args, ",")
 
 ## ------------------------------------------------------------------------
+using Pkg
 try import DrWatson
 catch
     import Pkg
-    Pkg.add("DrWatson")
+    pkg"add DrWatson"
 end
 import DrWatson: quickactivate
 quickactivate(@__DIR__, "Chemostat_Human1")
@@ -71,7 +72,6 @@ if install_flag
     run(`git checkout -- .`)
     run(`git pull`)
     # Install unregistered packages
-    using Pkg
     try
         pkg"rm Chemostat"
         pkg"rm UtilsJL"
