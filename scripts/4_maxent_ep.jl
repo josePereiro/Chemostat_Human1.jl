@@ -52,21 +52,22 @@ model_file = H1.get_human1_model_file(cell_line, const_level, model_type)
 @assert isfile(model_file)
 exp_grate = H1.get_NCI60_exchange(model_type, cell_line, const_level, :exp, "biomass") 
 println("exp objval:   ", exp_grate)
-# model = ChU.read_mat(model_file);
+model = ChU.read_mat(model_file);
 # model = ChU.clampfields!(model, [:b, :lb, :ub]; abs_max = 100.0, zeroth = 1e-8)
-# println("model objval: ", fba_objval(model))
+println("model size:   ", size(model))
+println("model objval: ", fba_objval(model))
 # model = ChLP.fva_preprocess(model; check_obj = H1.BIOMASS_IDER)
 # println("model objval: ", fba_objval(model))
 # fvafile = joinpath(H1.FVA_PP_MODELS_DIR, "fva_pp_model.bson")
 # ChU.save_data(fvafile, ChU.compressed_model(model))
 
 ## --------------------------------------------------------------------
-# loda cached
-model = ChU.load_data(model_file);
+# load cache Test
+# model = ChU.load_data(model_file);
 # model = ChU.uncompressed_model(model)
 # model = ChU.clampfields!(model, [:b, :lb, :ub]; abs_max = 100.0, zeroth = 1e-8)
-println("model size:   ", size(model))
-println("model objval: ", fba_objval(model))
+# println("model size:   ", size(model))
+# println("model objval: ", fba_objval(model))
 
 
 ## --------------------------------------------------------------------
