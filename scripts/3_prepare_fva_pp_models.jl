@@ -3,11 +3,14 @@ import DrWatson: quickactivate
 quickactivate(@__DIR__, "Chemostat_Human1")
 
 import MAT
+
 import Chemostat_Human1
 const H1 = Chemostat_Human1
-import Chemostat_Human1: Chemostat
-ChU = Chemostat.Utils
-ChLP = Chemostat.LP
+
+import Chemostat
+const Ch = Chemostat
+const ChU = Ch.Utils
+const ChLP = Ch.LP
 
 ## --------------------------------------------------------------------
 # Tools
@@ -30,9 +33,14 @@ for cell_line in H1.CELL_NAMES
             )
 
             model_file = H1.get_human1_model_file(cell_line, const_level, model_type)
-            isfile(model_file) ? ChU.println_inmw(string(relpath(model_file), " found!!")) : 
-                    (ChU.println_inmw(string("ERROR: ", relpath(model_file), " not found!!")), continue)
-
+            if isfile(model_file)
+                msg = string(relpath(model_file), " found!!")
+                ChU.println_inmw(msg) 
+            else
+                msg = string("ERROR: ", relpath(model_file), " not found!!")
+                ChU.println_inmw(msg)
+                continue
+            end
             
             ## --------------------------------------------------------------------
             # Check for existing file

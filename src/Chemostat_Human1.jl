@@ -2,6 +2,8 @@ module Chemostat_Human1
 
     import Chemostat
     import CSV
+    import DataFrames: DataFrame
+    
     include("Utils/Utils.jl")
 
     function __init__()

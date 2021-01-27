@@ -1,4 +1,7 @@
-## ------------------------------------------------------------------
+import DrWatson: quickactivate
+quickactivate(@__DIR__, "Chemostat_Human1")
+
+# ------------------------------------------------------------------
 # ARGS
 import ArgParse: ArgParseSettings, @add_arg_table!, parse_args
 
@@ -14,14 +17,19 @@ set = ArgParseSettings()
         help = "run predict_cellLines_gRates script"   
         action = :store_true
 end
-parsed_args = parse_args(set)
-no_restart_flag = parsed_args["no-restart"]
-comparativeFVA_flag = parsed_args["comparativeFVA"]
-predictGRate_flag = parsed_args["predictGRate"]
 
-## --------------------------------------------------------------------
-import DrWatson: quickactivate
-quickactivate(@__DIR__, "Chemostat_Human1")
+if isinteractive()
+    no_restart_flag = false
+    comparativeFVA_flag = false
+    predictGRate_flag = false
+else
+    parsed_args = parse_args(set)
+    no_restart_flag = parsed_args["no-restart"]
+    comparativeFVA_flag = parsed_args["comparativeFVA"]
+    predictGRate_flag = parsed_args["predictGRate"]
+end
+
+# --------------------------------------------------------------------
 
 import Chemostat_Human1
 const H1 = Chemostat_Human1

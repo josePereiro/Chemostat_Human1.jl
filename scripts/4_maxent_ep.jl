@@ -1,3 +1,7 @@
+import DrWatson: quickactivate
+quickactivate(@__DIR__, "Chemostat_Human1")
+
+# --------------------------------------------------------------------
 using ArgParse
 
 set = ArgParseSettings()
@@ -16,33 +20,42 @@ set = ArgParseSettings()
         required = false
 end
 
-const parsed_args = parse_args(set)
-# This must uniquely identify the script
-const SIM_IDER = parsed_args["name"]
+if isinteractive()
+    # This must uniquely identify the script
+    const SIM_IDER = "maxent_ep_v1"
+    const beta0 = 0.0
+    const beta1 = 10000.0
+else
+    const parsed_args = parse_args(set)
+    # This must uniquely identify the script
+    const SIM_IDER = parsed_args["name"]
+    const beta0 = parse(Float64, parsed_args["beta0"])
+    const beta1 = parse(Float64, parsed_args["beta1"])
+    
+end
 println("sim_ider: ", SIM_IDER)
-const beta0 = parse(Float64, parsed_args["beta0"])
 println("beta0: ", beta0)
-const beta1 = parse(Float64, parsed_args["beta1"])
 println("beta1: ", beta1)
 
 ## --------------------------------------------------------------------
-import DrWatson: quickactivate
-quickactivate(@__DIR__, "Chemostat_Human1")
-
 import MAT
 import SparseArrays
+
 import Chemostat_Human1
 const H1 = Chemostat_Human1
-import Chemostat_Human1: Chemostat
-ChU = Chemostat.Utils
-ChLP = Chemostat.LP
-ChSU = Chemostat.SimulationUtils
+
+import Chemostat
+const Ch = Chemostat
+const ChU = Ch.Utils
+const ChLP = Ch.LP
+const ChSU = Ch.SimulationUtils
 ChU.set_cache_dir(H1.CACHE_DIR)
 
 ## --------------------------------------------------------------------
 # Tools
 fba_objval(model) = ChLP.fba(model, H1.BIOMASS_IDER).obj_val
 # data/processed/fva_pp_models/constLevel_0/HS_578T__ecModel.bson
+
 ## --------------------------------------------------------------------
 # here I should load a fva_pp_model
 cell_line = "HS_578T"

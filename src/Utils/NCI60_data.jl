@@ -9,7 +9,7 @@ function _load_NCI60_exchanges_data()
             filename = string(model_type, "s_const_", const_level, "_exchangeFluxesComp.txt")
             path = joinpath(HUMAN1_NCI60_RESULTS_DIR, filename)
             !isfile(path) && continue
-            dict[const_level] = CSV.read(path)
+            dict[const_level] = CSV.read(path, DataFrame)
         end
     end
 end
