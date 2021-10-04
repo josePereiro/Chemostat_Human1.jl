@@ -3,6 +3,8 @@
 *cache/*
 data/processed/cache
 data/raw/
+data
+log.txt
 deps
 temp
 
