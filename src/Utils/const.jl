@@ -20,5 +20,5 @@ const ZEROTH = 1e-8
 
 const MODEL_TYPE_KEY = :model
 const MODEL_TYPE_SUFFIX = "__Model"
-const EC_MODEL_TYPE_KEY = :ecmodel
+const EC_MODEL_TYPE_KEY = :ecModel
 const EC_MODEL_TYPE_SUFFIX = "__ecModel"

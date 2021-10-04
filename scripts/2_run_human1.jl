@@ -1,4 +1,7 @@
-## ------------------------------------------------------------------
+import DrWatson: quickactivate
+quickactivate(@__DIR__, "Chemostat_Human1")
+
+# ------------------------------------------------------------------
 # ARGS
 import ArgParse: ArgParseSettings, @add_arg_table!, parse_args
 
@@ -14,14 +17,19 @@ set = ArgParseSettings()
         help = "run predict_cellLines_gRates script"   
         action = :store_true
 end
-parsed_args = parse_args(set)
-no_restart_flag = parsed_args["no-restart"]
-comparativeFVA_flag = parsed_args["comparativeFVA"]
-predictGRate_flag = parsed_args["predictGRate"]
 
-## --------------------------------------------------------------------
-import DrWatson: quickactivate
-quickactivate(@__DIR__, "Chemostat_Human1")
+if isinteractive()
+    no_restart_flag = false
+    comparativeFVA_flag = false
+    predictGRate_flag = false
+else
+    parsed_args = parse_args(set)
+    no_restart_flag = parsed_args["no-restart"]
+    comparativeFVA_flag = parsed_args["comparativeFVA"]
+    predictGRate_flag = parsed_args["predictGRate"]
+end
+
+# --------------------------------------------------------------------
 
 import Chemostat_Human1
 const H1 = Chemostat_Human1
@@ -168,7 +176,7 @@ end
 # Plant markers
 plant_matlocator(joinpath(H1.HUMAN1_MODELS_DIR, "get_models_folder"))
 plant_matlocator(joinpath(H1.CACHE_DIR, "get_cache_folder"))
-plant_matlocator(joinpath(H1.HUMAN1_PREDICTION_RESULTS_DIR, "get_results_folder"))
+plant_matlocator(joinpath(H1.HUMAN1_RESULTS_DIR, "get_results_folder"))
 plant_matlocator(joinpath(temp_dir, "get_proj_folder"))
 
 ## --------------------------------------------------------------------

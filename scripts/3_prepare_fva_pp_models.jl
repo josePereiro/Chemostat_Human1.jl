@@ -3,11 +3,14 @@ import DrWatson: quickactivate
 quickactivate(@__DIR__, "Chemostat_Human1")
 
 import MAT
+
 import Chemostat_Human1
 const H1 = Chemostat_Human1
-import Chemostat_Human1: Chemostat
-ChU = Chemostat.Utils
-ChLP = Chemostat.LP
+
+import Chemostat
+const Ch = Chemostat
+const ChU = Ch.Utils
+const ChLP = Ch.LP
 
 ## --------------------------------------------------------------------
 # Tools
@@ -30,9 +33,14 @@ for cell_line in H1.CELL_NAMES
             )
 
             model_file = H1.get_human1_model_file(cell_line, const_level, model_type)
-            isfile(model_file) ? ChU.println_inmw(string(relpath(model_file), " found!!")) : 
-                    (ChU.println_inmw(string("ERROR: ", relpath(model_file), " not found!!")), continue)
-
+            if isfile(model_file)
+                msg = string(relpath(model_file), " found!!")
+                ChU.println_inmw(msg) 
+            else
+                msg = string("ERROR: ", relpath(model_file), " not found!!")
+                ChU.println_inmw(msg)
+                continue
+            end
             
             ## --------------------------------------------------------------------
             # Check for existing file
@@ -46,7 +54,7 @@ for cell_line in H1.CELL_NAMES
             # Loading
             model_key, model_mat = first(MAT.matread(model_file));
             model = ChU.MetNet(model_mat; reshape = true);
-            ChU.clampfileds!(model, [:b, :lb, :ub]; 
+            ChU.clampfields!(model, [:b, :lb, :ub]; 
                 abs_max = H1.MAX_ABS_BOUND, zeroth = H1.ZEROTH)
             ChU.println_inmw("size: ", size(model))
             println("Orig model objval: ", fba_objval(model))
@@ -100,11 +108,8 @@ for cell_line in H1.CELL_NAMES
             
             ## --------------------------------------------------------------------
             # FVA preprocessing
-            # fva_pp_model = ChLP.fva_preprocess(model, check_obj = H1.BIOMASS_IDER);
-            # ChU.println_inmw("size: ", size(fva_pp_model))
-            fva_pp_model = model # test
-
-            # Checking
+            fva_pp_model = ChLP.fva_preprocess(model, check_obj = H1.BIOMASS_IDER);
+            ChU.println_inmw("size: ", size(fva_pp_model))
             ChU.println_inmw("fva preprocessed model, objval: ", fba_objval(model))
 
             ## --------------------------------------------------------------------
